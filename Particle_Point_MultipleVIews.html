@@ -37,7 +37,7 @@
 
 			var Particles = 10000;//粒子个数(在立方体体积一定的情况下，值越大，粒子越密集)
 
-			var Color=0;//当为0时设置粒子为彩色渐变，当为其他颜色值时，设置为纯色。
+			var ColorValue=0;//当为0时设置粒子为彩色渐变，当为其他颜色值时，设置为纯色。
 
 			var AutoRotation=true;//为true时自动旋转
 
@@ -153,19 +153,19 @@
 				var positions = [];
 				var colors = [];
 				var color = new THREE.Color();
-				var n = 1200, n2 = n/2; // particles spread in the cube
-				for ( var i = 0; i < particles; i ++ ) {
+
+				for ( var i = 0; i < Particles; i ++ ) {
 					// positions
-					var x = Math.random() * n - n2;
-					var y = Math.random() * n - n2;
-					var z = Math.random() * n - n2;
+					var x = Math.random() * CubeVolume - CubeVolume/2;
+					var y = Math.random() * CubeVolume - CubeVolume/2;
+					var z = Math.random() * CubeVolume - CubeVolume/2;
 					positions.push( x, y, z );
 
 					// colors
-					if(colorValue===0){
-						var vx = ( x / n ) + 1;
-						var vy = ( y / n ) + 1;
-						var vz = ( z / n ) + 1;
+					if(ColorValue===0){
+						var vx = ( x / CubeVolume ) + 1;
+						var vy = ( y / CubeVolume ) + 1;
+						var vz = ( z / CubeVolume ) + 1;
 
 						color.setRGB( vx, vy, vz );
 						colors.push( color.r, color.g, color.b );
@@ -238,7 +238,7 @@
 					//camera.aspect = width / height;
 					camera.updateProjectionMatrix();
 
-					if (isRotate){
+					if (AutoRotation){
 						var time = Date.now() * 0.001;
 						points.rotation.x = time * RotateX;
 						points.rotation.y = time * RotateY;
