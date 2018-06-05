@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - multiple views</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				color: #000;
+				font-family:Monospace;
+				font-size:13px;
+				text-align:center;
+				background-color: #5e5e5e;
+				margin: 0;
+				overflow: scroll;
+			}
+
+			a {
+				color: #0080ff;
+			}
+
+		</style>
+	</head>
+	<body>
+
+		<div id="container"></div>
+
+		<script src="js/three.js"></script>
+		<script src="js/Projector.js"></script>
+		<script src="js/CanvasRenderer.js"></script>
+		<script src="js/stats.min.js"></script>
+
+		<script>
+
+			//粒子相关属性
+			var cubeW=1200;//立方体体积有关，值越大，立方体体积越大
+
+			var particles = 10000;//粒子个数(在立方体体积一定的情况下，值越大，粒子越密集)
+
+			var colorValue=0;//当为0时设置粒子为彩色渐变，当为其他颜色值时，设置为纯色。
+
+			var isRotate=true;//为true时自动旋转
+
+			var RotateX=0.1; //x轴旋转角度
+
+			var RotateY=0.1;//y轴旋转角度
+			//粒子相关属性
+
+
+			var container, stats;
+
+			var views, scene, renderer;
+
+			var mouseX = 0, mouseY = 0;
+
+			var windowWidth, windowHeight;
+
+			var views = [
+				//左上,朝-z看，Top
+				{
+					left: 0,
+					top: 0,
+					width: 0.45,
+					height: 0.45,
+					background: new THREE.Color( 0x050505 ),
+					eye: [ 0, 0, 3000],
+					up: [ 0, 1, 0 ],
+					fov: 45,
+					updateCamera: function ( camera, scene, mouseX, mouseY ) {
+					  // camera.position.x = mouseX * 0.05;
+					  // camera.position.x = Math.max( Math.min( camera.position.x, 2000 ), -2000 );
+					  camera.lookAt( scene.position );
+					}
+				},
+				//左下，向左看
+				{
+					left: 0,
+					top: 0.46,
+					width: 0.45,
+					height: 0.45,
+					background: new THREE.Color( 0x050505 ),
+					eye: [ 0, 3000, 0 ],
+					up: [ 0, 1, 0 ],
+					fov: 45,
+					updateCamera: function ( camera, scene, mouseX, mouseY ) {
+					  //camera.position.x -= mouseX * 0.05;
+					  //camera.position.x = Math.max( Math.min( camera.position.x, 2000 ), -2000 );
+					  camera.lookAt( scene.position );
+					}
+				},
+				//右下
+				{
+					left: 0.455,
+					top: 0.46,
+					width: 0.45,
+					height: 0.45,
+					background: new THREE.Color( 0x050505 ),
+					eye: [ 3000, 0, 0 ],
+					up: [ 0, 1, 0 ],
+					fov: 45,
+					updateCamera: function ( camera, scene, mouseX, mouseY ) {
+					  // camera.position.x -= mouseX * 0.05;
+					  // camera.position.x = Math.max( Math.min( camera.position.x, 2000 ), -2000 );
+					  camera.lookAt( scene.position );
+					}
+				},
+				//右上
+				{
+					left: 0.455,
+					top: 0,
+					width: 0.45,
+					height: 0.45,
+					background: new THREE.Color( 0x050505 ),
+					eye: [ 1000, 500, 500 ],
+					up: [ 0, 1, 0 ],
+					fov: 45,
+					updateCamera: function ( camera, scene, mouseX, mouseY ) {
+					  //camera.position.y -= mouseX * 0.05;
+					  //camera.position.y = Math.max( Math.min( camera.position.y, 1600 ), -1600 );
+					  camera.lookAt( scene.position );
+					}
+				}
+			];
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.getElementById( 'container' );
+
+				for (var ii =  0; ii < views.length; ++ii ) {
+					var view = views[ii];
+					var camera = new THREE.PerspectiveCamera( view.fov, window.innerWidth / window.innerHeight, 1, 3000 );
+					camera.position.fromArray( view.eye );
+					camera.up.fromArray( view.up );
+					view.camera = camera;
+				}
+
+				scene = new THREE.Scene();
+				//console.log(scene.position);
+				//print(scene.position);
+				scene.fog = new THREE.Fog( 0x050505, 2000, 3500 );
+
+
+				var material = new THREE.PointsMaterial( {
+						 size: 10,
+						 //颜色会根据顶点来计算
+						 //color:0xffffff
+						 vertexColors: THREE.VertexColors
+				} );
+
+				var positions = [];
+				var colors = [];
+				var color = new THREE.Color();
+				var n = 1200, n2 = n/2; // particles spread in the cube
+				for ( var i = 0; i < particles; i ++ ) {
+					// positions
+					var x = Math.random() * n - n2;
+					var y = Math.random() * n - n2;
+					var z = Math.random() * n - n2;
+					positions.push( x, y, z );
+
+					// colors
+					if(colorValue===0){
+						var vx = ( x / n ) + 1;
+						var vy = ( y / n ) + 1;
+						var vz = ( z / n ) + 1;
+
+						color.setRGB( vx, vy, vz );
+						colors.push( color.r, color.g, color.b );
+					}else{
+						//将颜色设置为ColorValue的值
+						//color.setRGB();
+						//colors.push( color.r, color.g, color.b );
+					}
+				}
+
+				var geometry = new THREE.BufferGeometry();
+				geometry.addAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
+				geometry.addAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
+				//geometry.computeBoundingSphere();
+
+
+				points = new THREE.Points( geometry, material );
+				scene.add( points );
+
+				renderer = new THREE.WebGLRenderer({antialias: true, alpha: true} );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				container.appendChild( renderer.domElement );
+
+				stats = new Stats();
+				container.appendChild( stats.dom );
+
+			}
+
+
+			function updateSize() {
+					Width  = window.innerWidth/1.05;
+					windowWidth  = window.innerWidth;
+					windowHeight = window.innerHeight;
+					Height = window.innerWidth/1.65;
+
+					renderer.setSize ( Width, Height );
+			}
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+				render();
+				stats.update();
+			}
+
+			function render() {
+				updateSize();
+
+				for ( var ii = 0; ii < views.length; ++ii ) {
+
+					var view = views[ii];
+					var camera = view.camera;
+
+					view.updateCamera( camera, scene, mouseX, mouseY );
+
+					//从规格化的视口转变为屏幕坐标
+					var left   = Math.floor( Width  * view.left );
+					var top    = Math.floor( Height * view.top );
+					var width  = Math.floor( Width  * view.width );
+					var height = Math.floor( Height * view.height );
+
+					//设置视口在屏幕上的位置
+					renderer.setViewport( left, top, width, height );
+					renderer.setScissor( left, top, width, height );
+					renderer.setScissorTest( true );
+					renderer.setClearColor( view.background );
+
+					camera.aspect = 1;
+					//camera.aspect = width / height;
+					camera.updateProjectionMatrix();
+
+					if (isRotate){
+						var time = Date.now() * 0.001;
+						points.rotation.x = time * RotateX;
+						points.rotation.y = time * RotateY;
+					}else{
+						points.rotation.x =  RotateX;
+						points.rotation.y =  RotateY;
+					}
+					renderer.render( scene, camera );
+				}
+
+			}
+
+		</script>
+
+	</body>
+</html>
