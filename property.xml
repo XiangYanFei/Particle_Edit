@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<property>
+    <CubeVolume>1200</CubeVolume>//立方体体积有关，值越大，立方体体积越大
+
+    <Particles>10000</Particles>//粒子个数(在立方体体积一定的情况下，值越大，粒子越密集)
+
+    <ColorValue>0</ColorValue>//当为0时设置粒子为彩色渐变，当为其他颜色值时，设置为纯色。
+
+    <AutoRotation>true</AutoRotation>//为true时自动旋转
+
+    <RotateX>0.1</RotateX>//x轴旋转角度
+
+    <RotateY>0.1</RotateY>//y轴旋转角度
+</property>

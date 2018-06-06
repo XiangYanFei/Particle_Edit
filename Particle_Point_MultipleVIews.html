@@ -20,9 +20,11 @@
 			}
 
 		</style>
+
 	</head>
 	<body>
-
+        <h1 id="property" onclick="readProperties();">属性读取</h1>
+        <h1 onclick="writeProperties()">保存</h1>
 		<div id="container"></div>
 
 		<script src="js/three.js"></script>
@@ -31,20 +33,18 @@
 		<script src="js/stats.min.js"></script>
 
 		<script>
+        	//粒子相关属性
+            var CubeVolume=1200;//立方体体积有关，值越大，立方体体积越大
 
-			//粒子相关属性
-			var CubeVolume=1200;//立方体体积有关，值越大，立方体体积越大
+            var Particles = 10000;//粒子个数(在立方体体积一定的情况下，值越大，粒子越密集)
 
-			var Particles = 10000;//粒子个数(在立方体体积一定的情况下，值越大，粒子越密集)
+            var ColorValue=0;//当为0时设置粒子为彩色渐变，当为其他颜色值时，设置为纯色。
 
-			var ColorValue=0;//当为0时设置粒子为彩色渐变，当为其他颜色值时，设置为纯色。
+            var AutoRotation=true;//为true时自动旋转
 
-			var AutoRotation=true;//为true时自动旋转
+            var RotateX=0.1; //x轴旋转角度
 
-			var RotateX=0.1; //x轴旋转角度
-
-			var RotateY=0.1;//y轴旋转角度
-			//粒子相关属性
+            var RotateY=0.1;//y轴旋转角度
 
 
 			var container, stats;
@@ -251,7 +251,130 @@
 
 			}
 
-		</script>
+            function readProperties() {
+                if (window.XMLHttpRequest)
+                {// code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp=new XMLHttpRequest();
+                }
+                else
+                {// code for IE6, IE5
+                    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.open("GET","property.xml",false);
+                xmlhttp.send();
+                xmlDoc=xmlhttp.responseXML;
+
+
+                //读取xml数据
+                CubeVolume=xmlDoc.getElementsByTagName("CubeVolume")[0].childNodes[0].nodeValue;
+
+                Particles = xmlDoc.getElementsByTagName("Particles")[0].childNodes[0].nodeValue;
+
+                ColorValue=xmlDoc.getElementsByTagName("ColorValue")[0].childNodes[0].nodeValue;
+
+                AutoRotation= xmlDoc.getElementsByTagName("AutoRotation")[0].childNodes[0].nodeValue === "true";
+
+                RotateX=xmlDoc.getElementsByTagName("RotateX")[0].childNodes[0].nodeValue;
+
+                RotateY=xmlDoc.getElementsByTagName("RotateY")[0].childNodes[0].nodeValue;
+
+
+                document.getElementById("property").innerHTML= CubeVolume + " " +
+                    Particles + " " + ColorValue + " " + AutoRotation + " " +  RotateX + " " + RotateY;
+            }
+
+            function writeProperties() {
+                function CreatXmlDoc(obj){
+                    this.tagName=obj.tagName;
+                    var children=obj.children.map(function(item){
+                        if(typeof item =="object")
+                        {
+                            item=new CreatXmlDoc(item)
+                        }
+                        return item
+                    });
+                    this.children=children;
+                }
+
+                CreatXmlDoc.prototype.render=function(){
+                    var el=document.createElement(this.tagName);
+                    var children=this.children || [];
+                    children.forEach(function(child){
+                        var childEl=(child instanceof CreatXmlDoc)
+                            ? child.render()
+                            :document.createTextNode(child);
+                        el.appendChild(childEl);
+                    });
+                    return el
+                };
+
+                var obj={
+                    tagName:'Property',
+                    children:[
+                        {
+                            tagName:'CubeVolume',
+                            children:["la"]
+                        },
+                        {
+                            tagName:'Particles',
+                            children:["la"]
+                        },
+                        {
+                            tagName:'ColorValue',
+                            children:["la"]
+                        },
+                        {
+                            tagName:'AutoRotation',
+                            children:["la"]
+                        },
+                        {
+                            tagName:'RotateX',
+                            children:["la"]
+                        },
+                        {
+                            tagName:'RotateY',
+                            children:["la"]
+                        }
+                    ]
+                };
+
+                doc=new CreatXmlDoc(obj);
+                PropertySerial=(new XMLSerializer()).serializeToString(doc.render());
+                var reg = new RegExp(' xmlns="http://www.w3.org/1999/xhtml"',"g");
+                PropertySerial=PropertySerial.replace(reg,"");
+                //console.log(PropertySerial);
+
+                var xmldoc,fso, tf;
+                var is_Ie =false; //是否为IE浏览器
+                if (window.ActiveXObject) {
+                    is_Ie =true;
+                }
+
+                try {
+                    if(is_Ie){
+                        fso = new ActiveXObject("scripting.FileSystemObject");
+                        path = "D:\\temp\\";
+
+                        if (!fso.FolderExists(path)){   // 若当前路径不存在，则创建此路径。
+                            fso.CreateFolder(path);
+                        }
+                        path +=  "test.xml";   // 创建文档的路径。
+                        tf = fso.CreateTextFile(path, true);   // 创建新文件。
+                        var content = '<?xml version="1.0" encoding="UTF-8" ?>';
+                        content += PropertySerial;
+                        tf.WriteLine(content);
+                        tf.Close();
+                    }else{
+                        xmldoc = document.implementation.createDocument("", "", null);
+                        alert("非IE");
+                    }
+                }
+                catch (e) {
+                    alert(e.message);
+                }
+			}
+
+        </script>
 
 	</body>
 </html>
