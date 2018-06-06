@@ -28,6 +28,22 @@
         <h1 onclick="writeProperties()">保存</h1>
 		<div id="container"></div>
 
+		<!--css-->
+		<link href="css/style.css" rel='stylesheet' type='text/css'/>
+		<link rel="stylesheet" href="css/farbtastic.css" type="text/css"/>
+		<!--js-->
+		<script src="js/setting.js"></script>
+		<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+		<script type="text/javascript" src="js/farbtastic.js"></script>
+		<link rel="stylesheet" href="css/farbtastic.css" type="text/css"/>
+		<script type="text/javascript" charset="utf-8">
+            $(document).ready(function () {
+                $('#demo').hide();
+                $('#picker').farbtastic('#color');
+            });
+		</script>
+
+
 		<script src="js/three.js"></script>
 		<script src="js/Projector.js"></script>
 		<script src="js/CanvasRenderer.js"></script>
@@ -364,6 +380,71 @@
 			}
 
         </script>
+		<!--侧边栏-->
+		<div class="dg ac">
+			<div class="dg main a">
+				<ul style="height: auto;">
+					<li class="cr number has-slider">
+						<div>
+							<span class="property-name">cube volume</span>
+							<div class="c">
+								<input type="range" id="cubeVolume" onclick="setCubeVolume()">
+							</div>
+						</div>
+					</li>
+					<li class="cr number has-slider">
+						<div>
+							<span class="property-name">particles</span>
+							<div class="c">
+								<input type="range" id="particles" onclick="setParticles()">
+							</div>
+						</div>
+					</li>
+					<li class="cr number has-slider li-color">
+						<div><span class="property-name">color</span>
+							<div class="c color-padding">
+								<form action="" style="width: 400px;">
+									<div class="form-item">
+										<input type="text" id="color" name="color" value="#123456"/>
+									</div>
+									<div id="picker"  onclick="setColor()"></div>
+								</form>
+							</div>
+						</div>
+					</li>
+					<li class="cr number has-slider">
+						<div>
+							<span class="property-name">auto rotation</span>
+							<div class="c">
+								<input id="checkbox-ar" checked="" type="checkbox"   onclick="setAutoRotation()">
+								<label for="checkbox-ar"></label>
+							</div>
+						</div>
+					</li>
+					<li class="cr number has-slider">
+						<div><span class="property-name">rotateX</span>
+							<div class="c">
+								<input type="range" id="rotateX" onclick="setRotateX()">
+							</div>
+						</div>
+					</li>
+					<li class="cr number has-slider">
+						<div>
+							<span class="property-name">rotateY</span>
+							<div class="c">
+								<input type="range" id="rotateY" onclick="setRotateY()">
+							</div>
+						</div>
+					</li>
+					<li class="cr number has-slider li-btn">
+						<div>
+							<!--保存数据-->
+							<button class="save-btn" onclick="writeProperties()">save</button>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
 
 	</body>
 </html>
