@@ -23,6 +23,7 @@
 
 	</head>
 	<body>
+        <!--测试用，可删除-->
         <h1 id="property" onclick="readProperties();">属性读取</h1>
         <h1 onclick="writeProperties()">保存</h1>
 		<div id="container"></div>
@@ -31,6 +32,7 @@
 		<script src="js/Projector.js"></script>
 		<script src="js/CanvasRenderer.js"></script>
 		<script src="js/stats.min.js"></script>
+		<script src="js/FileSaver.js"></script>
 
 		<script>
         	//粒子相关属性
@@ -251,6 +253,7 @@
 
 			}
 
+			// 读取xml文件
             function readProperties() {
                 if (window.XMLHttpRequest)
                 {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -265,24 +268,34 @@
                 xmlDoc=xmlhttp.responseXML;
 
 
-                //读取xml数据
-                CubeVolume=xmlDoc.getElementsByTagName("CubeVolume")[0].childNodes[0].nodeValue;
+                // 读取xml数据,注释部分变量为全局变量
+                // CubeVolume=xmlDoc.getElementsByTagName("cubevolume")[0].childNodes[0].nodeValue;
 
-                Particles = xmlDoc.getElementsByTagName("Particles")[0].childNodes[0].nodeValue;
+                // Particles = xmlDoc.getElementsByTagName("particles")[0].childNodes[0].nodeValue;
 
-                ColorValue=xmlDoc.getElementsByTagName("ColorValue")[0].childNodes[0].nodeValue;
+                // ColorValue=xmlDoc.getElementsByTagName("colorvalue")[0].childNodes[0].nodeValue;
 
-                AutoRotation= xmlDoc.getElementsByTagName("AutoRotation")[0].childNodes[0].nodeValue === "true";
+                // AutoRotation= xmlDoc.getElementsByTagName("autorotation")[0].childNodes[0].nodeValue === "true";
 
-                RotateX=xmlDoc.getElementsByTagName("RotateX")[0].childNodes[0].nodeValue;
+                // RotateX=xmlDoc.getElementsByTagName("rotatex")[0].childNodes[0].nodeValue;
 
-                RotateY=xmlDoc.getElementsByTagName("RotateY")[0].childNodes[0].nodeValue;
+                // RotateY=xmlDoc.getElementsByTagName("rotatey")[0].childNodes[0].nodeValue;
 
 
-                document.getElementById("property").innerHTML= CubeVolume + " " +
-                    Particles + " " + ColorValue + " " + AutoRotation + " " +  RotateX + " " + RotateY;
+                // 局部变量作测试用
+                var cubevolume=xmlDoc.getElementsByTagName("cubevolume")[0].childNodes[0].nodeValue;
+                var particles = xmlDoc.getElementsByTagName("particles")[0].childNodes[0].nodeValue;
+                var colorvalue=xmlDoc.getElementsByTagName("colorvalue")[0].childNodes[0].nodeValue;
+                var autorotation= xmlDoc.getElementsByTagName("autorotation")[0].childNodes[0].nodeValue === "true";
+                var rotatex=xmlDoc.getElementsByTagName("rotatex")[0].childNodes[0].nodeValue;
+                var rotatey=xmlDoc.getElementsByTagName("rotatey")[0].childNodes[0].nodeValue;
+                // 页面显示，测试xml读取
+                document.getElementById("property").innerHTML= cubevolume + " " +
+                    particles + " " + colorvalue + " " + autorotation + " " +  rotatex + " " + rotatey;
             }
 
+            // 将当前属性参数保存到本地property.xml文件中
+            // 应修改obj.children内容为属性参数
             function writeProperties() {
                 function CreatXmlDoc(obj){
                     this.tagName=obj.tagName;
@@ -312,66 +325,42 @@
                     tagName:'Property',
                     children:[
                         {
-                            tagName:'CubeVolume',
+                            tagName:'cubevolume',
                             children:["la"]
                         },
                         {
-                            tagName:'Particles',
+                            tagName:'particles',
                             children:["la"]
                         },
                         {
-                            tagName:'ColorValue',
+                            tagName:'colorvalue',
                             children:["la"]
                         },
                         {
-                            tagName:'AutoRotation',
+                            tagName:'autorotation',
                             children:["la"]
                         },
                         {
-                            tagName:'RotateX',
+                            tagName:'rotatex',
                             children:["la"]
                         },
                         {
-                            tagName:'RotateY',
+                            tagName:'rotatey',
                             children:["la"]
                         }
                     ]
                 };
 
-                doc=new CreatXmlDoc(obj);
-                PropertySerial=(new XMLSerializer()).serializeToString(doc.render());
+                doc  = new CreatXmlDoc(obj);
+                PropertySerial = '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>';
+                PropertySerial +=(new XMLSerializer()).serializeToString(doc.render());
+
                 var reg = new RegExp(' xmlns="http://www.w3.org/1999/xhtml"',"g");
                 PropertySerial=PropertySerial.replace(reg,"");
                 //console.log(PropertySerial);
 
-                var xmldoc,fso, tf;
-                var is_Ie =false; //是否为IE浏览器
-                if (window.ActiveXObject) {
-                    is_Ie =true;
-                }
-
-                try {
-                    if(is_Ie){
-                        fso = new ActiveXObject("scripting.FileSystemObject");
-                        path = "D:\\temp\\";
-
-                        if (!fso.FolderExists(path)){   // 若当前路径不存在，则创建此路径。
-                            fso.CreateFolder(path);
-                        }
-                        path +=  "test.xml";   // 创建文档的路径。
-                        tf = fso.CreateTextFile(path, true);   // 创建新文件。
-                        var content = '<?xml version="1.0" encoding="UTF-8" ?>';
-                        content += PropertySerial;
-                        tf.WriteLine(content);
-                        tf.Close();
-                    }else{
-                        xmldoc = document.implementation.createDocument("", "", null);
-                        alert("非IE");
-                    }
-                }
-                catch (e) {
-                    alert(e.message);
-                }
+                var file = new File([PropertySerial], "property.xml", { type: "text/plain;charset=utf-8" });
+                saveAs(file);
 			}
 
         </script>
