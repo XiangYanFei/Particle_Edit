@@ -1,5 +1,1 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<property>
-    <cubevolume>asas</cubevolume>
-    <particles>aala</particles>
-    <colorvalue>lsa</colorvalue><autorotation>la</autorotation><rotatex>la</rotatex><rotatey>la</rotatey></property>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?><property><cubevolume>1200</cubevolume><particles>20000</particles><colorvalue>rgb(117,215,143)</colorvalue><autorotation>false</autorotation><rotatex>0.16</rotatex><rotatey>0.1</rotatey></property>
