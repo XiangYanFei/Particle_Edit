@@ -24,8 +24,8 @@
 	</head>
 	<body>
         <!--测试用，可删除-->
-        <h1 id="property" onclick="readProperties();">属性读取</h1>
-        <h1 onclick="writeProperties()">保存</h1>
+        <!--<h1 id="property" onclick="readProperties();">属性读取</h1>-->
+        <!--<h1 onclick="writeProperties()">保存</h1>-->
 		<div id="container"></div>
 
 		<!--css-->
@@ -285,29 +285,31 @@
 
 
                 // 读取xml数据,注释部分变量为全局变量
-                // CubeVolume=xmlDoc.getElementsByTagName("cubevolume")[0].childNodes[0].nodeValue;
+                CubeVolume=xmlDoc.getElementsByTagName("cubevolume")[0].childNodes[0].nodeValue;
 
-                // Particles = xmlDoc.getElementsByTagName("particles")[0].childNodes[0].nodeValue;
+                Particles = xmlDoc.getElementsByTagName("particles")[0].childNodes[0].nodeValue;
 
-                // ColorValue=xmlDoc.getElementsByTagName("colorvalue")[0].childNodes[0].nodeValue;
+                ColorValue=xmlDoc.getElementsByTagName("colorvalue")[0].childNodes[0].nodeValue;
 
-                // AutoRotation= xmlDoc.getElementsByTagName("autorotation")[0].childNodes[0].nodeValue === "true";
+                AutoRotation= xmlDoc.getElementsByTagName("autorotation")[0].childNodes[0].nodeValue === "true";
 
-                // RotateX=xmlDoc.getElementsByTagName("rotatex")[0].childNodes[0].nodeValue;
+                RotateX=xmlDoc.getElementsByTagName("rotatex")[0].childNodes[0].nodeValue;
 
-                // RotateY=xmlDoc.getElementsByTagName("rotatey")[0].childNodes[0].nodeValue;
+                RotateY=xmlDoc.getElementsByTagName("rotatey")[0].childNodes[0].nodeValue;
 
+                // document.getElementById("property").innerHTML= CubeVolume + " " +
+                //     Particles + " " + ColorValue + " " + AutoRotation + " " +  RotateX + " " + RotateY;
 
                 // 局部变量作测试用
-                var cubevolume=xmlDoc.getElementsByTagName("cubevolume")[0].childNodes[0].nodeValue;
-                var particles = xmlDoc.getElementsByTagName("particles")[0].childNodes[0].nodeValue;
-                var colorvalue=xmlDoc.getElementsByTagName("colorvalue")[0].childNodes[0].nodeValue;
-                var autorotation= xmlDoc.getElementsByTagName("autorotation")[0].childNodes[0].nodeValue === "true";
-                var rotatex=xmlDoc.getElementsByTagName("rotatex")[0].childNodes[0].nodeValue;
-                var rotatey=xmlDoc.getElementsByTagName("rotatey")[0].childNodes[0].nodeValue;
+                // var cubevolume=xmlDoc.getElementsByTagName("cubevolume")[0].childNodes[0].nodeValue;
+                // var particles = xmlDoc.getElementsByTagName("particles")[0].childNodes[0].nodeValue;
+                // var colorvalue=xmlDoc.getElementsByTagName("colorvalue")[0].childNodes[0].nodeValue;
+                // var autorotation= xmlDoc.getElementsByTagName("autorotation")[0].childNodes[0].nodeValue === "true";
+                // var rotatex=xmlDoc.getElementsByTagName("rotatex")[0].childNodes[0].nodeValue;
+                // var rotatey=xmlDoc.getElementsByTagName("rotatey")[0].childNodes[0].nodeValue;
                 // 页面显示，测试xml读取
-                document.getElementById("property").innerHTML= cubevolume + " " +
-                    particles + " " + colorvalue + " " + autorotation + " " +  rotatex + " " + rotatey;
+                // document.getElementById("property").innerHTML= cubevolume + " " +
+                //     particles + " " + colorvalue + " " + autorotation + " " +  rotatex + " " + rotatey;
             }
 
             // 将当前属性参数保存到本地property.xml文件中
@@ -342,27 +344,27 @@
                     children:[
                         {
                             tagName:'cubevolume',
-                            children:["la"]
+                            children:[CubeVolume]
                         },
                         {
                             tagName:'particles',
-                            children:["la"]
+                            children:[Particles]
                         },
                         {
                             tagName:'colorvalue',
-                            children:["la"]
+                            children:[ColorValue]
                         },
                         {
                             tagName:'autorotation',
-                            children:["la"]
+                            children:[AutoRotation]
                         },
                         {
                             tagName:'rotatex',
-                            children:["la"]
+                            children:[RotateX]
                         },
                         {
                             tagName:'rotatey',
-                            children:["la"]
+                            children:[RotateY]
                         }
                     ]
                 };
@@ -405,7 +407,7 @@
 							<div class="c color-padding">
 								<form action="" style="width: 400px;">
 									<div class="form-item">
-										<input type="text" id="color" name="color" value="#123456"/>
+										<input type="text" id="color" name="color" value="#000000"/>
 									</div>
 									<div id="picker"  onclick="setColor()"></div>
 								</form>
