@@ -1,17 +1,24 @@
 window.onload=function(){
     // 初始化内容
-    readProperties(); //读取xml中的数据
+    //readProperties(); //读取xml中的数据
+
+    //初始化进度条
     var cv=document.getElementById("cubeVolume");
     cv.value=CubeVolume/100;                         //需要初始化进度条 scroll取值为1-100
+
     var pt=document.getElementById("particles");
     pt.value=Particles/1000;                         //需要初始化进度条 scroll取值为1-100
+
     var co=document.getElementById("color");
     co.value=rgb2Hex(ColorValue);                     //数据没有问题 不能同步到颜色圈
-    console.log(co.value);
+    //console.log(co.value);
+
     var ca=document.getElementById("checkbox-ar");
     ca.checked=AutoRotation;
+
     var rx=document.getElementById("rotateX");
     rx.value=RotateX/0.01;                         //需要初始化进度条 scroll取值为1-100
+
     var ry=document.getElementById("rotateY");
     ry.value=RotateY/0.01;                         //需要初始化进度条 scroll取值为1-100
 
@@ -19,38 +26,46 @@ window.onload=function(){
 
 function setCubeVolume() {
     var scroll=document.getElementById("cubeVolume");
-    CubeVolume=scroll.value*100;//未确定具体比例 scroll取值为1-100
-    console.log("cubeVolume"+CubeVolume);
+    CubeVolume=scroll.value*30;//未确定具体比例 scroll取值为1-100
+    //console.log(CubeVolume);
+}
+
+function getCubeVolume(){
+    return document.getElementById("cubeVolume").value*30;
 }
 
 function setParticles() {
     var scroll=document.getElementById("particles");
-    Particles=scroll.value*1000;//未确定具体比例 scroll取值为1-100
-    console.log("particles"+Particles);
+    Particles=scroll.value*500;//未确定具体比例 scroll取值为1-100
+    //console.log("particles"+Particles);
 }
 
+function getColor(){
+    //let color=hex2Rgb(document.getElementById("color").value);
+    let color=rgb(250,22,3);
+    return color;
+}
 function setColor() {
     var scroll=document.getElementById("color");
     ColorValue=hex2Rgb(scroll.value);//格式为rgb(0,0,0)
+    return ColorValue;
     console.log(ColorValue);
 }
 
 function setAutoRotation() {
     var scroll=document.getElementById("checkbox-ar");
     AutoRotation=scroll.checked;
-    console.log("checkbox-ar"+AutoRotation);
+    //console.log("checkbox-ar"+AutoRotation);
 }
 
 function setRotateX() {
     var scroll=document.getElementById("rotateX");
     RotateX=scroll.value*0.01;//未确定具体比例 scroll取值为1-100
-    console.log("rotateX"+RotateX);
 }
 
 function setRotateY() {
     var scroll=document.getElementById("rotateY");
     RotateY=scroll.value*0.01;//未确定具体比例 scroll取值为1-100
-    console.log("rotateY"+RotateY);
 }
 
 function hex2Rgb(hex) { //十六进制转为RGB
@@ -83,7 +98,7 @@ function rgb2Hex(rgb) {
         });
         return hex; //返回十六进制
     } else {
-        console.log(`Input ${rgb} is wrong!`);
+        //console.log(`Input ${rgb} is wrong!`);
         return '#000'; //输入格式错误,返回#000
     }
 }
